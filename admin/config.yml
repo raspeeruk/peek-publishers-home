@@ -1,0 +1,932 @@
+backend:
+  name: git-gateway
+  accept_roles:
+    - admin
+    - editor
+  branch: master
+media_folder: theme/assets/images
+public_folder: /assets/images
+collections:
+  - name: pages
+    label: Pages
+    identifier_field: title
+    extension: md
+    create: false
+    delete: false
+    slug: '{{slug}}'
+    editor:
+      preview: false
+    folder: cms/pages
+    fields:
+      - label: Title
+        name: title
+        widget: string
+      - label: Publish Date
+        name: date
+        widget: datetime
+      - label: Layout
+        widget: hidden
+        name: layout
+        default: '{{slug}}.html'
+      - &ref_0
+        label: Seo
+        name: seo
+        widget: object
+        collapsed: true
+        fields:
+          - label: Title
+            name: title
+            widget: string
+            required: false
+          - label: Description
+            name: description
+            widget: string
+            required: false
+          - label: No index
+            name: noindex
+            widget: boolean
+            default: false
+            required: false
+          - label: Open Graph Title
+            name: og:title
+            widget: string
+            required: false
+          - label: Open Graph Image
+            name: og:image
+            widget: image
+            required: false
+            media_library:
+              config:
+                multiple: false
+          - label: Twitter Title
+            name: twitter:title
+            widget: string
+            default: summary
+            required: false
+          - label: Twitter Card
+            name: twitter:card
+            widget: string
+            default: summary
+            required: false
+          - label: Twitter Site
+            name: twitter:site
+            widget: string
+            required: false
+          - label: Twitter Creator
+            name: twitter:creator
+            widget: string
+            required: false
+          - label: Twitter Image
+            name: twitter:image
+            widget: image
+            required: false
+            media_library:
+              config:
+                multiple: false
+          - label: Additional HTML tags
+            name: additional_tags
+            widget: text
+            required: false
+  - name: categories
+    label: Categories
+    folder: cms/categories
+    create: true
+    identifier_field: name
+    extension: md
+    slug: '{{slug}}'
+    fields:
+      - hint: ''
+        name: title
+        label: Name
+        widget: string
+        required: true
+      - hint: ''
+        name: created-on
+        label: Created On
+        widget: datetime
+        required: false
+      - hint: ''
+        name: updated-on
+        label: Updated On
+        widget: datetime
+        required: false
+      - hint: ''
+        name: published-on
+        label: Published On
+        widget: datetime
+        required: false
+      - label: Tags
+        widget: hidden
+        name: tags
+        default: categories
+      - label: Layout
+        widget: hidden
+        name: layout
+        default: '[categories].html'
+      - label: Publish Date
+        name: date
+        widget: datetime
+      - *ref_0
+    editor:
+      preview: false
+  - name: publications
+    label: Publications
+    folder: cms/publications
+    create: true
+    identifier_field: name
+    extension: md
+    slug: '{{slug}}'
+    fields:
+      - hint: ''
+        name: title
+        label: Name
+        widget: string
+        required: true
+      - hint: ''
+        name: created-on
+        label: Created On
+        widget: datetime
+        required: false
+      - hint: ''
+        name: updated-on
+        label: Updated On
+        widget: datetime
+        required: false
+      - hint: ''
+        name: published-on
+        label: Published On
+        widget: datetime
+        required: false
+      - hint: ''
+        name: f_url
+        label: Url
+        widget: string
+        required: false
+      - hint: ''
+        name: f_webflow-categories
+        label: Webflow categories
+        widget: relation
+        required: false
+        collection: categories
+        value_field: cms/categories/{{slug}}.md
+        search_fields:
+          - slug
+          - name
+        display_fields:
+          - title
+        multiple: false
+      - hint: ''
+        name: f_one-word
+        label: One word
+        widget: string
+        required: false
+      - hint: ''
+        name: f_publication-one-word
+        label: Publication one word
+        widget: string
+        required: false
+      - hint: ''
+        name: f_publication-description
+        label: Publication description
+        widget: string
+        required: false
+      - label: Tags
+        widget: hidden
+        name: tags
+        default: publications
+      - label: Layout
+        widget: hidden
+        name: layout
+        default: '[publications].html'
+      - label: Publish Date
+        name: date
+        widget: datetime
+      - *ref_0
+    editor:
+      preview: false
+  - label: Theme Settings
+    name: settings
+    identifier_field: title
+    extension: json
+    create: false
+    delete: false
+    slug: '{{slug}}'
+    editor:
+      preview: false
+    files:
+      - label: General
+        name: site
+        file: cms/_data/settings/site.json
+        fields:
+          - label: Title
+            name: title
+            widget: hidden
+            default: General
+          - hint: Full domain url (needed for a correct sitemap file)
+            name: domain
+            label: Domain
+            widget: string
+            required: false
+          - name: favicon
+            label: Favicon
+            widget: image
+            allow_multiple: false
+            required: false
+          - name: apple_touch_icon
+            label: Apple Touch Icon
+            widget: image
+            allow_multiple: false
+            required: false
+          - name: header_additional_content
+            label: Additional Content Header
+            hint: Content here will be placed before </head> tag
+            widget: text
+            required: false
+          - name: footer_additional_content
+            label: Additional Content Footer
+            hint: Content here will be placed before </body> tag
+            widget: text
+            required: false
+          - name: images_optimization
+            label: Images Optimization
+            widget: object
+            collapsed: false
+            fields:
+              - label: Image Formats
+                name: formats
+                widget: select
+                multiple: true
+                options:
+                  - label: Avif
+                    value: avif
+                  - label: Webp
+                    value: webp
+              - label: Image Dimensions
+                name: dimensions
+                widget: select
+                multiple: true
+                options:
+                  - label: '500'
+                    value: 500
+                  - label: '800'
+                    value: 800
+                  - label: '1080'
+                    value: 1080
+                  - label: '1600'
+                    value: 1600
+                  - label: '2000'
+                    value: 2000
+                  - label: '2600'
+                    value: 2600
+      - label: Colors
+        name: colors
+        file: cms/_data/colors.json
+        fields:
+          - label: Title
+            name: title
+            widget: hidden
+            default: Colors
+      - label: Texts
+        name: texts
+        file: cms/_data/texts.json
+        fields:
+          - label: Title
+            name: title
+            widget: hidden
+            default: Texts
+          - hint: 'Original text: PEEK, key: 25695b'
+            label: Text
+            name: 25695b
+            widget: string
+          - hint: 'Original text: PUBLISHERS, key: -70a77609'
+            label: Text
+            name: '-70a77609'
+            widget: string
+          - hint: 'Original text: Log in, key: -7804285f'
+            label: Text
+            name: '-7804285f'
+            widget: string
+          - hint: 'Original text: Publications, key: 4183f7e7'
+            label: Text
+            name: 4183f7e7
+            widget: string
+          - hint: 'Original text: About, key: 3c2336d'
+            label: Text
+            name: 3c2336d
+            widget: string
+          - hint: 'Original text: Advertising, key: -176680fc'
+            label: Text
+            name: '-176680fc'
+            widget: string
+          - hint: 'Original text: Contact, key: -64104400'
+            label: Text
+            name: '-64104400'
+            widget: string
+          - hint: 'Original text: Subscribe Now, key: -72c4e940'
+            label: Text
+            name: '-72c4e940'
+            widget: string
+          - hint: 'Original text: See the publications, key: -43af449d'
+            label: Text
+            name: '-43af449d'
+            widget: string
+          - hint: >-
+              Original text: Business insights for industry leaders, key:
+              6493c9a4
+            label: Text
+            name: 6493c9a4
+            widget: string
+          - hint: >-
+              Original text: Daily industry analysis bringing you the news and
+              insights that matter., key: -2c91c3c6
+            label: Text
+            name: '-2c91c3c6'
+            widget: string
+          - hint: 'Original text: 34, key: 661'
+            label: Text
+            name: '661'
+            widget: string
+          - hint: 'Original text: industries, key: 738b12fc'
+            label: Text
+            name: 738b12fc
+            widget: string
+          - hint: 'Original text: 39, key: 666'
+            label: Text
+            name: '666'
+            widget: string
+          - hint: 'Original text: Super. Simple. Insights., key: 35abba62'
+            label: Text
+            name: 35abba62
+            widget: string
+          - hint: 'Original text: The insights you need. Daily., key: -4bf26aec'
+            label: Text
+            name: '-4bf26aec'
+            widget: string
+          - hint: >-
+              Original text: Our publications help business leaders stay on top
+              of the biggest stories and trends in their industry., key:
+              -5341d315
+            label: Text
+            name: '-5341d315'
+            widget: text
+          - hint: 'Original text: View Publications, key: 21730162'
+            label: Text
+            name: '21730162'
+            widget: string
+          - hint: 'Original text: © , key: 1497'
+            label: Text
+            name: '1497'
+            widget: string
+          - hint: 'Original text: XXXX, key: 295600'
+            label: Text
+            name: '295600'
+            widget: string
+          - hint: "Original text:  Peek\_Publishers. All rights reserved., key: -7c9dce56"
+            label: Text
+            name: '-7c9dce56'
+            widget: string
+          - hint: 'Original text: Terms, key: 4cf5967'
+            label: Text
+            name: 4cf5967
+            widget: string
+          - hint: 'Original text: Privacy, key: 5079bb68'
+            label: Text
+            name: 5079bb68
+            widget: string
+          - hint: 'Original text: Cookies, key: -64062591'
+            label: Text
+            name: '-64062591'
+            widget: string
+          - hint: 'Original text: Read by business leaders, key: -56f05897'
+            label: Text
+            name: '-56f05897'
+            widget: string
+          - hint: 'Original text: Subscribe, key: -69de02d6'
+            label: Text
+            name: '-69de02d6'
+            widget: string
+          - hint: >-
+              Original text: This is some text inside of a div block., key:
+              7635fb4f
+            label: Text
+            name: 7635fb4f
+            widget: string
+          - hint: 'Original text: No items found., key: 3d503d2b'
+            label: Text
+            name: 3d503d2b
+            widget: string
+          - hint: "Original text: Grow with Peek\_Publishers, key: -4c765f31"
+            label: Text
+            name: '-4c765f31'
+            widget: string
+          - hint: "Original text: Your Brand\_Story Told, key: -793a8b3c"
+            label: Text
+            name: '-793a8b3c'
+            widget: string
+          - hint: >-
+              Original text: We collaborate with industry leaders to find their
+              ideal customer and drive demand, key: 6b78986b
+            label: Text
+            name: 6b78986b
+            widget: string
+          - hint: 'Original text: Get Started, key: -364d0a89'
+            label: Text
+            name: '-364d0a89'
+            widget: string
+          - hint: 'Original text: Brand awareness, key: 6af5503c'
+            label: Text
+            name: 6af5503c
+            widget: string
+          - hint: 'Original text: Reach your marketing goals, key: 6f4e1c06'
+            label: Text
+            name: 6f4e1c06
+            widget: string
+          - hint: >-
+              Original text: Increase brand awareness, boost engagement, and
+              enhance lead quality with the expertise of our marketing, SEO,
+              lead generation, and distribution specialists. Leverage our
+              audience for valuable first-party insights to inform and refine
+              your strategy., key: -7ed56017
+            label: Text
+            name: '-7ed56017'
+            widget: text
+          - hint: 'Original text: Brand Awareness, key: -1d988fe4'
+            label: Text
+            name: '-1d988fe4'
+            widget: string
+          - hint: >-
+              Original text: Elevate brand awareness through native advertising
+              by connecting with your audience on their trusted news platforms.
+              Strengthen your brand by aligning with the sources they rely on.,
+              key: -453a9c15
+            label: Text
+            name: '-453a9c15'
+            widget: text
+          - hint: 'Original text: Brand Storytelling, key: 659bac35'
+            label: Text
+            name: 659bac35
+            widget: string
+          - hint: >-
+              Original text: Tap into our 15+ years of experience in crafting
+              and executing successful content marketing programs for some of
+              the world’s leading brands., key: 23391766
+            label: Text
+            name: '23391766'
+            widget: text
+          - hint: 'Original text: Thought Leadership, key: -3f288094'
+            label: Text
+            name: '-3f288094'
+            widget: string
+          - hint: >-
+              Original text: Our content studio creates original, journalistic
+              stories with unique perspectives, in-depth insights, and expert
+              research., key: -36e74e49
+            label: Text
+            name: '-36e74e49'
+            widget: text
+          - hint: 'Original text: Lead Generation, key: 504f045c'
+            label: Text
+            name: 504f045c
+            widget: string
+          - hint: >-
+              Original text: Expand your content’s impact through our
+              distribution network, reaching over 1 million key decision-makers
+              across 39 industries., key: 66e5a9bf
+            label: Text
+            name: 66e5a9bf
+            widget: text
+          - hint: 'Original text: Get started with a campaign, key: -850a700'
+            label: Text
+            name: '-850a700'
+            widget: string
+          - hint: >-
+              Original text: We can't wait to hear more about your goals., key:
+              -26744920
+            label: Text
+            name: '-26744920'
+            widget: string
+          - hint: 'Original text: First name, key: 69c1a21b'
+            label: Text
+            name: 69c1a21b
+            widget: string
+          - hint: 'Original text: Last name, key: -1407da4b'
+            label: Text
+            name: '-1407da4b'
+            widget: string
+          - hint: 'Original text: Business Email, key: -1d98d4c4'
+            label: Text
+            name: '-1d98d4c4'
+            widget: string
+          - hint: 'Original text: Company, key: -64202ba3'
+            label: Text
+            name: '-64202ba3'
+            widget: string
+          - hint: 'Original text: Job Title, key: 61f97ff5'
+            label: Text
+            name: 61f97ff5
+            widget: string
+          - hint: 'Original text: Phone (optional), key: -56aae44d'
+            label: Text
+            name: '-56aae44d'
+            widget: string
+          - hint: 'Original text: Region, key: -6e52ecec'
+            label: Text
+            name: '-6e52ecec'
+            widget: string
+          - hint: 'Original text: Select one..., key: 57f3b1cc'
+            label: Text
+            name: 57f3b1cc
+            widget: string
+          - hint: 'Original text: The Americas, key: -7a40d4cc'
+            label: Text
+            name: '-7a40d4cc'
+            widget: string
+          - hint: 'Original text: EMEA, key: 208744'
+            label: Text
+            name: '208744'
+            widget: string
+          - hint: 'Original text: Asia Pacific, key: 66275133'
+            label: Text
+            name: '66275133'
+            widget: string
+          - hint: >-
+              Original text: What is your primary marketing interest?, key:
+              46a0e44a
+            label: Text
+            name: 46a0e44a
+            widget: string
+          - hint: >-
+              Original text: Advertising to reach the peek audience, key:
+              3ad99044
+            label: Text
+            name: 3ad99044
+            widget: string
+          - hint: 'Original text: Branded content creation, key: -218c42c0'
+            label: Text
+            name: '-218c42c0'
+            widget: string
+          - hint: 'Original text: Access to an editorial calendar, key: 69256381'
+            label: Text
+            name: '69256381'
+            widget: string
+          - hint: 'Original text: PR assistance, key: -119bbfea'
+            label: Text
+            name: '-119bbfea'
+            widget: string
+          - hint: 'Original text: Other, key: 48f8ef0'
+            label: Text
+            name: 48f8ef0
+            widget: string
+          - hint: 'Original text: You agree to our friendly , key: 483d5851'
+            label: Text
+            name: 483d5851
+            widget: string
+          - hint: 'Original text: privacy policy, key: 329660ca'
+            label: Text
+            name: 329660ca
+            widget: string
+          - hint: 'Original text: ., key: 2e'
+            label: Text
+            name: 2e
+            widget: string
+          - hint: >-
+              Original text: Thank you! Your submission has been received!, key:
+              5a0ea5a1
+            label: Text
+            name: 5a0ea5a1
+            widget: string
+          - hint: >-
+              Original text: Oops! Something went wrong while submitting the
+              form., key: -7c112e99
+            label: Text
+            name: '-7c112e99'
+            widget: string
+          - hint: 'Original text: Get in Touch, key: -53f399f2'
+            label: Text
+            name: '-53f399f2'
+            widget: string
+          - hint: "Original text: Questions?\_Let us know how we can help., key: 53ed4061"
+            label: Text
+            name: 53ed4061
+            widget: string
+          - hint: 'Original text: Contact us, key: 7f274abe'
+            label: Text
+            name: 7f274abe
+            widget: string
+          - hint: >-
+              Original text: If you're interested in advertising please contact
+              us on our , key: 669809e7
+            label: Text
+            name: '669809e7'
+            widget: string
+          - hint: 'Original text: advertising page, key: -7e7badf5'
+            label: Text
+            name: '-7e7badf5'
+            widget: string
+          - hint: >-
+              Original text: . For anything else please let us know how we can
+              help., key: -346bea29
+            label: Text
+            name: '-346bea29'
+            widget: string
+          - hint: 'Original text: Name, key: 24eeab'
+            label: Text
+            name: 24eeab
+            widget: string
+          - hint: 'Original text: Email, key: 3ff5b7c'
+            label: Text
+            name: 3ff5b7c
+            widget: string
+          - hint: 'Original text: Message, key: -63dc6819'
+            label: Text
+            name: '-63dc6819'
+            widget: string
+          - hint: 'Original text: Built to inform. , key: 848a01e'
+            label: Text
+            name: 848a01e
+            widget: string
+          - hint: >-
+              Original text: Peek Publishers was created to provide the daily
+              analysis you need on the news that matters for your industry.,
+              key: -222b0388
+            label: Text
+            name: '-222b0388'
+            widget: text
+          - hint: 'Original text: About Us, key: 645efc51'
+            label: Text
+            name: 645efc51
+            widget: string
+          - hint: >-
+              Original text: The news you need. Summarized, analyzed and
+              delivered., key: 2adc85bd
+            label: Text
+            name: 2adc85bd
+            widget: string
+          - hint: >-
+              Original text: We keep tabs on the news that matters to you and
+              then send you a daily summary that contains analysis and
+              synthesis. We connect the dots on the topics that matter to you.,
+              key: -17362332
+            label: Text
+            name: '-17362332'
+            widget: text
+          - hint: 'Original text: Timeline, key: -77ecc79f'
+            label: Text
+            name: '-77ecc79f'
+            widget: string
+          - hint: >-
+              Original text: Where we've been and where are we going., key:
+              5ae24c95
+            label: Text
+            name: 5ae24c95
+            widget: string
+          - hint: 'Original text: 2021, key: 1774fd'
+            label: Text
+            name: 1774fd
+            widget: string
+          - hint: >-
+              Original text: Andrew Speer set up Two Cores - a development and
+              automation agency. Startded building custom automations and
+              business intelligence reports for clients., key: 2202dad7
+            label: Text
+            name: 2202dad7
+            widget: text
+          - hint: 'Original text: 2022, key: 1774fe'
+            label: Text
+            name: 1774fe
+            widget: string
+          - hint: "Original text: Founded Peek Publishing on the back of our first newsletter - Tech Peek.\_Started reaching decision makers in the technology and financial industries., key: 11531703"
+            label: Text
+            name: '11531703'
+            widget: text
+          - hint: 'Original text: 2023, key: 1774ff'
+            label: Text
+            name: 1774ff
+            widget: string
+          - hint: >-
+              Original text: Launched five new publications including daily
+              briefings for CTOs, CFOs and CIOs. Launched Peek Studio to help
+              brands develop effective communication and marketing to reach
+              their target clients., key: 6f07185b
+            label: Text
+            name: 6f07185b
+            widget: text
+          - hint: 'Original text: 2024, key: 177500'
+            label: Text
+            name: '177500'
+            widget: string
+          - hint: >-
+              Original text: Launched 30+ new publications taking total
+              publications to 40 across industries and sectors., key: 71c8706
+            label: Text
+            name: 71c8706
+            widget: text
+      - label: Links
+        name: links
+        file: cms/_data/links.json
+        fields:
+          - label: Title
+            name: title
+            widget: hidden
+            default: Links
+          - hint: 'Original link: /, key: 2f'
+            label: Link
+            name: 2f
+            widget: string
+          - hint: 'Original link: #, key: 23'
+            label: Link
+            name: '23'
+            widget: string
+          - hint: 'Original link: /publications/, key: 3713d979'
+            label: Link
+            name: 3713d979
+            widget: string
+          - hint: 'Original link: /about/, key: 61642f31'
+            label: Link
+            name: 61642f31
+            widget: string
+          - hint: 'Original link: /advertising/, key: -1526c0c6'
+            label: Link
+            name: '-1526c0c6'
+            widget: string
+          - hint: 'Original link: /contact/, key: 16bdc13e'
+            label: Link
+            name: 16bdc13e
+            widget: string
+      - label: Images
+        name: images
+        file: cms/_data/images.json
+        fields:
+          - label: Title
+            name: title
+            widget: hidden
+            default: Images
+          - label: Image
+            name: 58a3f9a4
+            widget: object
+            fields:
+              - name: url
+                label: Image Url
+                widget: image
+                allow_multiple: false
+                required: false
+              - name: alt
+                label: Image Alt
+                widget: string
+                required: false
+          - label: Image
+            name: '13946645'
+            widget: object
+            fields:
+              - name: url
+                label: Image Url
+                widget: image
+                allow_multiple: false
+                required: false
+              - name: alt
+                label: Image Alt
+                widget: string
+                required: false
+          - label: Image
+            name: i4922bfae
+            widget: object
+            fields:
+              - name: url
+                label: Image Url
+                widget: image
+                allow_multiple: false
+                required: false
+              - name: alt
+                label: Image Alt
+                widget: string
+                required: false
+          - label: Image
+            name: '71252639'
+            widget: object
+            fields:
+              - name: url
+                label: Image Url
+                widget: image
+                allow_multiple: false
+                required: false
+              - name: alt
+                label: Image Alt
+                widget: string
+                required: false
+          - label: Image
+            name: 3601ddf7
+            widget: object
+            fields:
+              - name: url
+                label: Image Url
+                widget: image
+                allow_multiple: false
+                required: false
+              - name: alt
+                label: Image Alt
+                widget: string
+                required: false
+          - label: Image
+            name: '-35d2134f'
+            widget: object
+            fields:
+              - name: url
+                label: Image Url
+                widget: image
+                allow_multiple: false
+                required: false
+              - name: alt
+                label: Image Alt
+                widget: string
+                required: false
+          - label: Image
+            name: 7c36b515
+            widget: object
+            fields:
+              - name: url
+                label: Image Url
+                widget: image
+                allow_multiple: false
+                required: false
+              - name: alt
+                label: Image Alt
+                widget: string
+                required: false
+          - label: Image
+            name: '-2c906cc3'
+            widget: object
+            fields:
+              - name: url
+                label: Image Url
+                widget: image
+                allow_multiple: false
+                required: false
+              - name: alt
+                label: Image Alt
+                widget: string
+                required: false
+          - label: Image
+            name: '-5f3c92fd'
+            widget: object
+            fields:
+              - name: url
+                label: Image Url
+                widget: image
+                allow_multiple: false
+                required: false
+              - name: alt
+                label: Image Alt
+                widget: string
+                required: false
+          - label: Image
+            name: 1847e31b
+            widget: object
+            fields:
+              - name: url
+                label: Image Url
+                widget: image
+                allow_multiple: false
+                required: false
+              - name: alt
+                label: Image Alt
+                widget: string
+                required: false
+          - label: Image
+            name: '-60f16b9c'
+            widget: object
+            fields:
+              - name: url
+                label: Image Url
+                widget: image
+                allow_multiple: false
+                required: false
+              - name: alt
+                label: Image Alt
+                widget: string
+                required: false
+          - label: Image
+            name: '-62a6443b'
+            widget: object
+            fields:
+              - name: url
+                label: Image Url
+                widget: image
+                allow_multiple: false
+                required: false
+              - name: alt
+                label: Image Alt
+                widget: string
+                required: false
+          - label: Image
+            name: '-474e1ced'
+            widget: object
+            fields:
+              - name: url
+                label: Image Url
+                widget: image
+                allow_multiple: false
+                required: false
+              - name: alt
+                label: Image Alt
+                widget: string
+                required: false
